@@ -1,0 +1,3 @@
+Searching and Sorting
+
+Binary search finds an element in O(log n) if array is sorted. Sorting algorithms include QuickSort, MergeSort, BubbleSort. Complexity analysis uses Big O notation.

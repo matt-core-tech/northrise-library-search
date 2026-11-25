@@ -1,0 +1,3 @@
+Stacks and Queues
+
+A stack uses LIFO order while a queue uses FIFO order. Common stack operations: push, pop, top. Queues support enqueue and dequeue. Stacks are used in recursion and expression evaluation.

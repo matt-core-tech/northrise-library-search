@@ -1,0 +1,3 @@
+Dynamic Programming
+
+Dynamic Programming breaks problems into overlapping subproblems and stores solutions. Examples: Fibonacci with memoization, Knapsack, Longest Common Subsequence.

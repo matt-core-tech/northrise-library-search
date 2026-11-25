@@ -1,0 +1,3 @@
+Binary Search Trees
+
+BSTs keep left child < parent < right child. Operations include search, insert, delete. Balanced BST variants include AVL and Red-Black Trees.

@@ -1,0 +1,3 @@
+Greedy Algorithms
+
+Greedy algorithms make locally optimal choices hoping to find global optimum. Examples include Prim's and Kruskal's for minimum spanning trees.

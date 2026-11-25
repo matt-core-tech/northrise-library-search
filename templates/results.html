@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Results for "{{ query }}"</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Results for: <em>{{ query }}</em></h1>
+      <p>{{ num_results }} result(s) found.</p>
+      <a href="{{ url_for('index') }}" class="back-btn"><i class="fa fa-arrow-left"></i> Back</a>
+    </header>
+
+    <section class="results">
+      {% if results %}
+        <ul class="result-list">
+          {% for r in results %}
+            <li class="result">
+              <h3><a href="{{ url_for('serve_document', filename=r.title) }}">{{ r.title }}</a></h3>
+              <div class="meta">
+                <span><i class="fa fa-chart-line"></i> Score: {{ r.score }}</span>
+                <span><i class="fa fa-folder"></i> Category: {{ r.category }}</span>
+                <span><i class="fa fa-tags"></i> Top terms: {{ r.top_terms | join(', ') }}</span>
+              </div>
+              <p class="snippet">{{ r.snippet | safe }}</p>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>No results matched your query. Try different keywords or remove filters.</p>
+      {% endif %}
+    </section>
+
+    <footer>
+      <small>Matched terms are highlighted.</small>
+    </footer>
+  </div>
+</body>
+</html>

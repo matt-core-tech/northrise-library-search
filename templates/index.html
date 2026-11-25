@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Northrise Library Search</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Northrise University Library Search</h1>
+      <p>Documents indexed: {{ num_docs }}</p>
+    </header>
+
+    <section class="upload">
+      <h2>UPLOAD A .txt DOCUMENT</h2>
+      <form class="cb" action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
+        <label for="f" class="custom-file-upload">Choose File</label>
+        <input id="f" type="file" name="file" accept=".txt">
+        <button type="submit">Upload & Index</button>
+      </form>
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <ul class="flashes">
+            {% for msg in messages %}
+              <li>{{ msg }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      {% endwith %}
+    </section>
+
+    <section class="searchbox">
+      <!--<h2>Search Documents</h2>-->
+      <form action="{{ url_for('search') }}" method="get" id="searchForm" class="search-form">
+        <div class="search-container">
+          <!-- Magnifying glass -->
+          <button id="searchBtn" type="submit" class="icon-btn" title="Search">
+            <i class="fa fa-search"></i>
+          </button>
+
+          <!-- Input -->
+          <input id="q" type="text" name="q" placeholder='              Try "stack AND pop" or "graph OR tree"' autocomplete="off">
+
+          <!-- Mic -->
+          <button id="voiceBtn" type="button" class="icon-btn" title="Voice search">
+            <i class="fa fa-microphone"></i>
+          </button>
+
+          <!-- Cancel -->
+          <button id="cancelBtn" type="button" class="icon-btn" title="Clear search">
+            <i class="fa fa-times"></i>
+          </button>
+        </div>
+
+        <!-- Category filter -->
+         <div class="category-container">
+          <label for="category">Category:</label>
+          <select name="category" id="category">
+          <option>All</option>
+          {% for c in categories %}
+            <option>{{ c }}</option>
+          {% endfor %}
+          </select>
+         </div>
+      </form>
+
+      <ul id="suggestions" class="suggestions-list"></ul>
+      <div id="voiceStatus" class="small muted"></div>
+    </section>
+
+    <footer>
+      <small>Includes voice search and live suggestions using TF-IDF ranking.</small>
+    </footer>
+  </div>
+
+  <script>
+    // --- Voice Search ---
+    const voiceBtn = document.getElementById("voiceBtn");
+    const qInput = document.getElementById("q");
+    const voiceStatus = document.getElementById("voiceStatus");
+    const cancelBtn = document.getElementById("cancelBtn");
+
+    let recognition = null;
+    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+      voiceStatus.textContent = "Voice search not supported in this browser.";
+      voiceBtn.disabled = true;
+    } else {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognition = new SpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      recognition.onstart = () => { voiceStatus.textContent = "🎤 Listening..."; };
+      recognition.onerror = (e) => { voiceStatus.textContent = "Error: " + e.error; };
+      recognition.onend = () => { voiceStatus.textContent = ""; };
+
+      recognition.onresult = (event) => {
+        const text = event.results[0][0].transcript;
+        qInput.value = text;
+        document.getElementById("searchForm").submit();
+      };
+    }
+
+    voiceBtn.addEventListener("click", () => {
+      if (recognition) recognition.start();
+    });
+
+    // Cancel/clear search
+    cancelBtn.addEventListener("click", () => {
+      qInput.value = "";
+      document.getElementById("suggestions").innerHTML = "";
+    });
+
+    // --- Suggestions (client-side mock example) ---
+    const suggestionsList = document.getElementById("suggestions");
+    const exampleSuggestions = ["algorithm", "data structure", "binary tree", "queue", "stack", "graph theory"];
+
+    qInput.addEventListener("input", () => {
+      const val = qInput.value.toLowerCase();
+      suggestionsList.innerHTML = "";
+      if (!val) return;
+      const filtered = exampleSuggestions.filter(s => s.toLowerCase().includes(val));
+      filtered.forEach(s => {
+        const li = document.createElement("li");
+        li.textContent = s;
+        li.addEventListener("click", () => {
+          qInput.value = s;
+          suggestionsList.innerHTML = "";
+          document.getElementById("searchForm").submit();
+        });
+        suggestionsList.appendChild(li);
+      });
+    });
+    
+  </script>
+
+</body>
+</html>

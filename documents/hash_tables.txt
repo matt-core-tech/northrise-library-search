@@ -1,0 +1,3 @@
+Hash Tables
+
+Hash tables map keys to values using a hash function. Handling collisions: chaining or open addressing. Average lookup time is O(1).

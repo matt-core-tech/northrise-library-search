@@ -1,0 +1,3 @@
+Trees and Graphs
+
+Trees are acyclic graphs with a root. Binary search trees allow fast search, insertion, and deletion. Graphs may be directed or undirected. Graph traversal algorithms include DFS and BFS.

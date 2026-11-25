@@ -1,0 +1,3 @@
+Big O Notation
+
+Big O notation describes asymptotic complexity: O(1), O(log n), O(n), O(n log n), O(n^2). It's useful for comparing algorithm efficiency.
